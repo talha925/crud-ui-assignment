@@ -8,26 +8,9 @@ const nanoid = customAlphabet('1234567890', 20)
 import './config/index.mjs';
 const mongodbURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority`;
 
-const connectDB = async () => {
-  try {
-    const client = new MongoClient(mongodbURI);
-    await client.connect();
-    const database = client.db('ecom');
-    productsCollection = database.collection('products');
-    console.log("Connected to MongoDB");
-  } catch (error) {
-    console.log("Error connecting to MongoDB:", error);
-    process.exit(1);
-  }
-};
-
-// Connect to the database before starting the server
-connectDB().then(() => {
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
-  });
-});
+const client = new MongoClient(mongodbURI);
+const database = client.db('ecom');
+const productsCollection = database.collection('products');
 
 
 const app = express();
@@ -193,3 +176,8 @@ app.delete("/product/:id", async (req, res) => {
 
 
 
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
