@@ -8,9 +8,9 @@ const nanoid = customAlphabet('1234567890', 20)
 import './config/index.mjs';
 const mongodbURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority`;
 
-const client = new MongoClient(mongodbURI);
-const database = client.db('ecom');
-const productsCollection = database.collection('products');
+// const client = new MongoClient(mongodbURI);
+// const database = client.db('ecom');
+// const productsCollection = database.collection('products');
 
 
 const app = express();
@@ -18,6 +18,30 @@ app.use(express.json());
 app.use(cors(["http://localhost:3000", "192.168.2.114",]));
 
 app.use(morgan('combined'));
+
+
+
+let productsCollection;  // Defining a placeholder for the collection
+
+console.log("Connecting to MongoDB...");
+
+const client = new MongoClient(mongodbURI);  // MongoDB connection
+
+client.connect()  // Connecting to the MongoDB cluster
+  .then(() => {
+    console.log("Connected to MongoDB successfully!");
+
+    const database = client.db('ecom');  // Selecting the 'ecom' database
+    productsCollection = database.collection('products');  // Selecting the 'products' collection
+
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`);
+    });
+  })
+  .catch(error => {
+    console.error("Error connecting to MongoDB:", error);
+  });
 
 
 app.get("/products", async (req, res) => {
@@ -176,7 +200,7 @@ app.delete("/product/:id", async (req, res) => {
 
 
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// const port = process.env.PORT || 3000;
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
