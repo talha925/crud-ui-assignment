@@ -19,10 +19,6 @@ app.use(cors(["http://localhost:3000", "192.168.2.114",]));
 
 app.use(morgan('combined'));
 
-app.get("/", (req, res) => {
-  res.send("hello world!");
-});
-
 
 app.get("/products", async (req, res) => {
 
@@ -174,6 +170,9 @@ app.delete("/product/:id", async (req, res) => {
   }
 });
 
+//hosting index.html file
+// app.get("/", express.static("public"));
+// app.use(express.static("public"));
 
 
 
