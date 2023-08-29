@@ -44,6 +44,11 @@ client.connect()  // Connecting to the MongoDB cluster
   });
 
 
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
+
+
 app.get("/products", async (req, res) => {
 
   const cursor = productsCollection.find({});
