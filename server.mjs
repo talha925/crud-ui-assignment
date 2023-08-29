@@ -5,9 +5,9 @@ import morgan from 'morgan';
 import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('1234567890', 20)
 
+import 'dotenv/config';
 import './config/index.mjs';
 const mongodbURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority`;
-
 // const client = new MongoClient(mongodbURI);
 // const database = client.db('ecom');
 // const productsCollection = database.collection('products');
