@@ -1,13 +1,12 @@
 import cors from 'cors';
-import express from "express";
-import { MongoClient, ObjectId } from "mongodb";
+import express from 'express';
+import { MongoClient, ObjectId } from 'mongodb';
 import morgan from 'morgan';
 import { customAlphabet } from 'nanoid';
-import './config/index.mjs';
 
 const nanoid = customAlphabet('1234567890', 20);
 
-const mongodbURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority`;
+import './config/index.mjs';
 
 const app = express();
 app.use(express.json());
@@ -17,14 +16,17 @@ app.use(morgan('combined'));
 
 let productsCollection;
 
-const startServer = async () => {
+const mongodbURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority`;
+
+console.log("Connecting to MongoDB...");
+
+const connectDB = async () => {
   try {
     const client = new MongoClient(mongodbURI);
     await client.connect();
-    console.log("Connected to MongoDB successfully!");
-
     const database = client.db('ecom');
     productsCollection = database.collection('products');
+    console.log("Connected to MongoDB");
 
     const port = process.env.PORT || 2000;
     app.listen(port, () => {
@@ -32,12 +34,11 @@ const startServer = async () => {
     });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1);
+    process.exit(1); // Exit the process if there's an error
   }
 };
 
-startServer();
-
+connectDB();
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");
