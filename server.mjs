@@ -17,28 +17,26 @@ app.use(morgan('combined'));
 
 let productsCollection;
 
-console.log("Connecting to MongoDB...");
-
-const client = new MongoClient(mongodbURI);
-
-client.connect()
-  .then(() => {
+const startServer = async () => {
+  try {
+    const client = new MongoClient(mongodbURI);
+    await client.connect();
     console.log("Connected to MongoDB successfully!");
 
     const database = client.db('ecom');
     productsCollection = database.collection('products');
 
-    const port = process.env.PORT || 2000; // Change the port here if needed
+    const port = process.env.PORT || 2000;
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`);
     });
-  })
-  .catch(error => {
+  } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1); // Exit the process if there's an error
-  });
+    process.exit(1);
+  }
+};
 
-
+startServer();
 
 
 app.get("/", (req, res) => {
