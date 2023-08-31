@@ -3,45 +3,42 @@ import express from "express";
 import { MongoClient, ObjectId } from "mongodb";
 import morgan from 'morgan';
 import { customAlphabet } from 'nanoid';
-const nanoid = customAlphabet('1234567890', 20)
-
-import 'dotenv/config';
 import './config/index.mjs';
-const mongodbURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority`;
-// const client = new MongoClient(mongodbURI);
-// const database = client.db('ecom');
-// const productsCollection = database.collection('products');
 
+const nanoid = customAlphabet('1234567890', 20);
+
+const mongodbURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.wy0j9mw.mongodb.net/?retryWrites=true&w=majority`;
 
 const app = express();
 app.use(express.json());
-app.use(cors(["http://localhost:3000", "192.168.2.114",]));
+app.use(cors(["http://localhost:3000", "192.168.2.114"]));
 
 app.use(morgan('combined'));
 
-
-
-let productsCollection;  // Defining a placeholder for the collection
+let productsCollection;
 
 console.log("Connecting to MongoDB...");
 
-const client = new MongoClient(mongodbURI);  // MongoDB connection
+const client = new MongoClient(mongodbURI);
 
-client.connect()  // Connecting to the MongoDB cluster
+client.connect()
   .then(() => {
     console.log("Connected to MongoDB successfully!");
 
-    const database = client.db('ecom');  // Selecting the 'ecom' database
-    productsCollection = database.collection('products');  // Selecting the 'products' collection
+    const database = client.db('ecom');
+    productsCollection = database.collection('products');
 
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 2000; // Change the port here if needed
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`);
     });
   })
   .catch(error => {
     console.error("Error connecting to MongoDB:", error);
+    process.exit(1); // Exit the process if there's an error
   });
+
+
 
 
 app.get("/", (req, res) => {
